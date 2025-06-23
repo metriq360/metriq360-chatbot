@@ -47,3 +47,4 @@ flask-cors
 google-generativeai
 numpy
 gunicorn
+openai==1.30.3
