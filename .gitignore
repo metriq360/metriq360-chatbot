@@ -1,0 +1,12 @@
+# Sanal Ortam Klasörü
+/venv/
+
+# Python Cache Dosyaları
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# İşletim Sistemi Dosyaları
+.DS_Store
+Thumbs.db
