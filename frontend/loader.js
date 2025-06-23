@@ -10,7 +10,7 @@
 
         const chatIframe = document.createElement('iframe');
 
-        chatIframe.src = "https://metriq360-chatbot-backend.onrender.com"; // BURASI BACKEND (Render) adresi olacak
+        chatIframe.src = "https://metriq360.github.io/metriq360-chatbot/frontend/";// BURASI BACKEND (Render) adresi olacak
         chatIframe.id = "metriq360-chatbot-iframe";
         chatIframe.style.cssText = `
             border: none !important;
