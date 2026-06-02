@@ -77,7 +77,7 @@ export default function SystemeGuide({ personality }: SystemeGuideProps) {
   ];
 
   return (
-    <div id="systeme-guide-container" className="bg-growth-dark/80 backdrop-blur-md rounded-2xl border border-slate-800 p-6 shadow-xl flex flex-col h-full">
+    <div id="systeme-guide-container" className="bg-growth-dark/80 backdrop-blur-md rounded-2xl border border-slate-800 p-6 shadow-xl flex flex-col h-full min-w-0 overflow-hidden">
       <div className="flex items-center gap-2 mb-4">
         <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           <FileCode className="w-5 h-5" />
@@ -117,7 +117,7 @@ export default function SystemeGuide({ personality }: SystemeGuideProps) {
         </div>
 
         {/* Code Block with highlights */}
-        <pre id="code-block-embed" className="bg-slate-900 p-4 rounded-lg overflow-x-auto text-[10.5px] font-mono text-slate-300 border border-slate-800/80 leading-relaxed max-h-[160px] overflow-y-auto">
+        <pre id="code-block-embed" className="bg-slate-900 p-4 rounded-lg overflow-x-auto text-[10.5px] font-mono text-slate-300 border border-slate-800/80 leading-relaxed max-h-[160px] overflow-y-auto whitespace-pre-wrap break-all select-all">
           <code>{generatedScript}</code>
         </pre>
       </div>
