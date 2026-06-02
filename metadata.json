@@ -1,0 +1,6 @@
+{
+  "name": "Systeme.io AI Chatbot Builder",
+  "description": "Customize and embed an intelligent growth-focused conversational AI assistant into your Systeme.io pages to capture leads, answer agency FAQs, and schedule client discovery calls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
