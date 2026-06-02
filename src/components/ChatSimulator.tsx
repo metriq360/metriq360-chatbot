@@ -264,32 +264,48 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
       <div id="standalone-embed-container" className="flex flex-col h-full w-full bg-[#121421] text-xs relative overflow-hidden">
         {/* Bot Header */}
         <div id="embed-header" className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none`}>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-              <span className="font-display font-black text-sm">🤖</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center border border-white/20 shadow-inner">
+              <span className="font-display font-black text-sm">🚀</span>
             </div>
             <div>
-              <h3 className="font-bold text-xs truncate leading-none">{personality.botName}</h3>
-              <span className="text-[9px] text-white/80">{personality.agencyName}</span>
+              <h3 className="font-bold text-xs truncate leading-none tracking-wide">{personality.botName}</h3>
+              <span className="text-[9px] text-white/80 mt-0.5 block font-medium">Çevrimiçi Asistan</span>
             </div>
           </div>
-          <button
-            id="btn-reset-embed"
-            onClick={handleResetChat}
-            className="p-1.5 hover:bg-white/15 rounded-lg transition-colors cursor-pointer pointer-events-auto"
-            title="Sohbeti Sıfırla"
-          >
-            <RefreshCw className="w-3.5 h-3.5 text-white" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              id="btn-reset-embed"
+              onClick={handleResetChat}
+              className="p-1.5 hover:bg-white/15 rounded-lg transition-colors cursor-pointer pointer-events-auto"
+              title="Sohbeti Sıfırla"
+              type="button"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-white" />
+            </button>
+            <button
+              id="btn-close-embed"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.parent.postMessage("close-growth-bot", "*");
+                }
+              }}
+              className="p-1.5 hover:bg-white/15 rounded-lg transition-colors cursor-pointer pointer-events-auto"
+              title="Kapat"
+              type="button"
+            >
+              <span className="text-xs font-bold block leading-none">✕</span>
+            </button>
+          </div>
         </div>
 
         {/* Discovery Lead banner */}
-        <div id="embed-banner" className="bg-slate-900/90 border-b border-slate-800 p-2 text-[10px] flex justify-between items-center text-slate-300 select-none">
-          <span className="flex items-center gap-1">
+        <div id="embed-banner" className="bg-slate-900/90 border-b border-slate-800/80 p-2 text-[10px] flex justify-between items-center text-slate-300 select-none">
+          <span className="flex items-center gap-1.5 font-medium">
             <Calendar className={`w-3.5 h-3.5 ${theme.text}`} />
             Büyüme Seansı ({personality.teamContact})
           </span>
-          <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Aktif</span>
+          <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 text-[9px] uppercase tracking-wider">Aktif</span>
         </div>
 
         {/* Message List */}
@@ -306,8 +322,8 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
                     : "bg-slate-900/90 border border-slate-800/80 rounded-tl-none pr-4"
                 }`}
               >
-                <p className="whitespace-pre-line text-[11px]">{renderMessageText(m.text, m.role === "user" ? "text-white" : theme.text)}</p>
-                <span className="text-[8px] text-slate-500 block text-right mt-1">
+                <div className="whitespace-pre-line text-[11px] leading-relaxed break-words">{renderMessageText(m.text, m.role === "user" ? "text-white" : theme.text)}</div>
+                <span className="text-[8px] text-slate-500 block text-right mt-1.5">
                   {m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
@@ -315,16 +331,16 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
           ))}
 
           {messages.length === 1 && !isTyping && (
-            <div id="embed-onboarding-card" className="bg-slate-900/70 border border-emerald-500/15 rounded-2xl p-3.5 space-y-2.5 mt-1 border-dashed shadow-lg shadow-black/40 animate-fade-in shrink-0">
+            <div id="embed-onboarding-card" className="bg-slate-900/70 border border-slate-800/85 rounded-2xl p-3.5 space-y-2.5 mt-1 border-dashed shadow-lg shadow-black/40 animate-fade-in shrink-0">
               <p className="text-[10px] font-bold text-slate-300 flex items-center gap-1.5">
                 <Sparkles className={`w-3 h-3 ${theme.text} animate-pulse`} />
-                En Kritik Büyüme Darboğazınız Nedir?
+                En Büyük Büyüme Sorununuz Nedir?
               </p>
               <div className="flex flex-col gap-1.5">
                 <button 
                   onClick={() => sendMessage("Büyüme darboğazım: Müşteri edinmekte ve yeni kitlelere ulaşmakta zorlanıyorum. Metriq360 sistemi bu konuda ne sunuyor?")}
                   type="button"
-                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/5 border border-slate-800/80 hover:border-emerald-500/20 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
                 >
                   <span className="truncate">🔍 Müşteri Edinme Zorluğu</span>
                   <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
@@ -333,7 +349,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
                 <button 
                   onClick={() => sendMessage("Büyüme darboğazım: Ciro artışı hedefliyoruz. Satışları katlamak için funnel ve Meta/Google kampanyalarımızı nasıl optimize edebiliriz?")}
                   type="button"
-                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/5 border border-slate-800/80 hover:border-emerald-500/20 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
                 >
                   <span className="truncate">💰 Ciro Artışı Hedefleme</span>
                   <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
@@ -342,7 +358,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
                 <button 
                   onClick={() => sendMessage("Büyüme darboğazım: Yeterli nitelikli lead / potansiyel talep bulamıyoruz ve satış ekibimiz boş kalıyor. Lead gen sürecimizi ve reklamlarımızı nasıl tasarsınız?")}
                   type="button"
-                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/5 border border-slate-800/80 hover:border-emerald-500/20 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
                 >
                   <span className="truncate">🎯 Yeterli Lead Bulamama</span>
                   <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
@@ -351,7 +367,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
                 <button 
                   onClick={() => sendMessage("Büyüme darboğazım: Dijital reklam bütçemiz boşa gidiyor (yüksek CAC), istediğimiz hedeflere ulaşamıyoruz. Bütçe kaçak durumunu nasıl denetleriz?")}
                   type="button"
-                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-rose-500/10 border border-slate-800/80 hover:border-rose-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-rose-500/5 border border-slate-800/80 hover:border-rose-500/20 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
                 >
                   <span className="truncate">📉 İstenilen Hedeflere Ulaşamama</span>
                   <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-rose-400" />
@@ -362,7 +378,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
                   <button 
                     onClick={() => sendMessage("Bize özel ciro hesaplama aracı ile sayfa hızı/reklam bütçe kayıp teşhis testleriniz hakkında bilgi edinmek ve testleri yapmak istiyorum.")}
                     type="button"
-                    className="font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                    className={`font-bold hover:underline transition-all cursor-pointer ${theme.text}`}
                   >
                     ⚡ Büyüme Testini Planla
                   </button>
@@ -374,13 +390,13 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
           {isTyping && (
             <div className="flex flex-col space-y-1">
               <div className="flex justify-start">
-                <div className="bg-slate-900 border border-slate-800/40 rounded-2xl rounded-tl-none px-4 py-2.5 flex items-center space-x-1 shadow-sm">
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></span>
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                <div className="bg-slate-900 border border-slate-800/40 rounded-2xl rounded-tl-none px-4 py-2.5 flex items-center space-x-1.5 shadow-sm">
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${theme.bg}`}></span>
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.2s] ${theme.bg}`}></span>
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.4s] ${theme.bg}`}></span>
                 </div>
               </div>
-              <span className="text-[9px] text-slate-500 italic pl-1 animate-pulse">
+              <span className="text-[9px] text-slate-500 italic pl-1 animate-pulse select-none">
                 ☕ Sunucu uyandırılıyor...
               </span>
             </div>
@@ -397,16 +413,16 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
         </div>
 
         {/* Suggested Questions Area */}
-        <div id="embed-suggestions" className="px-3 pb-1 border-t border-slate-900 bg-slate-950/20 max-h-[100px] overflow-y-auto">
-          <span className="text-[9px] text-slate-500 font-bold block py-1 select-none">Sık Sorulan Sorular:</span>
-          <div className="flex flex-wrap gap-1.5 pb-2">
+        <div id="embed-suggestions" className="px-3 py-1.5 border-t border-slate-900 bg-slate-950/25 shrink-0">
+          <span className="text-[9px] text-slate-500 font-bold block pb-1.5 select-none uppercase tracking-wider">Sık Sorulan Sorular:</span>
+          <div className="flex flex-row overflow-x-auto whitespace-nowrap gap-2 pb-1 scrollbar-none snap-x pointer-events-auto">
             {interactiveSuggestions.map((s, idx) => (
               <button
                 key={idx}
                 id={`btn-suggestion-embed-${idx}`}
                 onClick={() => sendMessage(s.text)}
                 type="button"
-                className="text-[9.5px] bg-slate-905 border border-slate-800/80 text-slate-300 hover:text-white hover:border-slate-755 hover:bg-slate-800/50 py-1 px-2 rounded-full transition-all text-left pointer-events-auto cursor-pointer"
+                className="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 hover:bg-slate-800/50 py-1.5 px-3 rounded-full transition-all flex-shrink-0 snap-start pointer-events-auto cursor-pointer font-medium"
               >
                 {s.label}
               </button>
@@ -415,7 +431,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
         </div>
 
         {/* Chat Input Bar */}
-        <form id="form-chat-embed" onSubmit={handleFormSubmit} className="p-2.5 bg-slate-950 border-t border-slate-900 flex gap-2 items-center">
+        <form id="form-chat-embed" onSubmit={handleFormSubmit} className="p-2.5 bg-slate-950 border-t border-slate-900 flex gap-2 items-center shrink-0">
           <input
             id="input-chat-embed"
             ref={inputMobileRef}
@@ -424,7 +440,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             disabled={isTyping}
-            className="flex-1 bg-slate-900 border border-slate-800 rounded-full px-3.5 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 text-xs"
+            className={`flex-1 bg-slate-900 border border-slate-800 rounded-full px-3.5 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 ${theme.ring} text-xs`}
           />
           <button
             id="btn-send-embed"
