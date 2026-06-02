@@ -197,7 +197,7 @@ export default function App() {
     // If embedded on external pages, render only the simulator with zero margin/padding bounds
     return (
       <div id="growth-bot-standalone-root" className="fixed inset-0 h-full w-full bg-[#121420] text-xs">
-        <ChatSimulator personality={personality} faqData={faqData} />
+        <ChatSimulator personality={personality} faqData={faqData} isEmbedOnly={true} />
       </div>
     );
   }
