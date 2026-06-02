@@ -334,9 +334,34 @@ async function initializeServer() {
     // Using process.cwd() to resolve /dist directory to prevent esbuild __dirname compilation issues
     const distPath = path.join(process.cwd(), "dist");
     console.log(`Serving static files from directory: ${distPath}`);
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    
+    // Serve hashed assets (js, css, images) with long-term cache headers since they are fingerprinted
+    app.use(express.static(distPath, {
+      maxAge: "31536000",
+      immutable: true,
+      index: false // We will handle general HTML routing explicitly
+    }));
+
+    // Cache-prevention handler for index.html to ensure users always receive the latest bundle index
+    const serveIndexWithoutCache = (req: express.Request, res: express.Response) => {
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
       res.sendFile(path.join(distPath, "index.html"));
+    };
+
+    app.get("/", serveIndexWithoutCache);
+    app.get("/index.html", serveIndexWithoutCache);
+
+    // Fallback handler for client SPA routing
+    app.get("*", (req, res) => {
+      // CRITICAL: If the request is for an asset file (e.g., .css, .js) that was not found,
+      // return 404 instead of index.html. This prevents the browser from trying to parse index.html
+      // as CSS, which triggers "MIME type mismatch" errors and breaks the layout completely!
+      if (req.path.includes(".") || req.path.startsWith("/assets/")) {
+        return res.status(404).send("File not found");
+      }
+      serveIndexWithoutCache(req, res);
     });
   }
 
