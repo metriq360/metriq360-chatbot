@@ -186,6 +186,9 @@ app.get("/api/config", (req, res) => {
 // Dynamic Widget Loader script
 app.get("/widget-loader.js", (req, res) => {
   res.setHeader("Content-Type", "application/javascript");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
   res.send(`
 (function() {
   if (document.getElementById('growth-bot-standalone-iframe')) return;
@@ -200,14 +203,11 @@ app.get("/widget-loader.js", (req, res) => {
   const scriptTag = document.querySelector('script[src*="widget-loader.js"]');
   const serviceUrl = scriptTag ? new URL(scriptTag.src).origin : window.location.origin;
   
+  // High efficiency query params - we pass themeColor so the spinner and shell load instantly, 
+  // but full text/corpus is transferred securely via postMessage handshake to avoid URL length limit!
   const queryParams = new URLSearchParams({
     widget: "true",
-    agencyName: config.agencyName || "",
-    botName: config.botName || "",
-    themeColor: config.themeColor || "emerald",
-    welcomeMessage: config.welcomeMessage || "",
-    markdownBrain: config.markdownBrain || "",
-    systemInstructions: config.systemInstructions || ""
+    themeColor: config.themeColor || "emerald"
   });
   
   const iframeUrl = serviceUrl + "/?" + queryParams.toString();
@@ -297,9 +297,15 @@ app.get("/widget-loader.js", (req, res) => {
     launcher.style.display = 'none'; // HIDE launcher to avoid overlap completely
   };
   
-  // Listen for close message from iframe
+  // Listen for messages from iframe (Handshake and Close event)
   window.addEventListener('message', function(event) {
-    if (event.data === 'close-growth-bot') {
+    if (event.data === 'growth-bot-ready') {
+      // Robust handshake: once the iframe React app mounts and alerts us, we send security configurations!
+      iframe.contentWindow.postMessage({
+        type: 'configure-growth-bot',
+        config: config
+      }, '*');
+    } else if (event.data === 'close-growth-bot') {
       iframe.style.opacity = '0';
       iframe.style.transform = 'translateY(20px)';
       setTimeout(() => {
