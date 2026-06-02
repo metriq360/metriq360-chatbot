@@ -10,6 +10,30 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
+// Dynamic CORS Security Middleware to secure endpoints while keeping preview & site compatibility
+app.use((req, res, next) => {
+  const origin = req.headers.origin || "";
+  
+  const isAllowedOrigin = 
+    origin === "" || 
+    /https?:\/\/([a-zA-Z0-9-]+\.)?metriq360\.tr(\/.*)?$/.test(origin) ||
+    /https?:\/\/([a-zA-Z0-9-]+\.)?systeme\.io(\/.*)?$/.test(origin) ||
+    origin.includes("localhost") ||
+    origin.includes("127.0.0.1") ||
+    origin.includes("run.app"); // AI Studio Preview Compatibility
+
+  if (isAllowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Parse request bodies as JSON
 app.use(express.json());
 
@@ -273,7 +297,9 @@ async function initializeServer() {
   } else {
     // Production Mode serving compiled assets
     console.log("Starting server in PRODUCTION mode...");
+    // Using process.cwd() to resolve /dist directory to prevent esbuild __dirname compilation issues
     const distPath = path.join(process.cwd(), "dist");
+    console.log(`Serving static files from directory: ${distPath}`);
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
