@@ -260,7 +260,7 @@ export default function App() {
       <main id="main-grid-workspace" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex-1 grid lg:grid-cols-12 gap-8 w-full">
         
         {/* Left Column: Tools, Customization and Guides (7 columns width) */}
-        <section id="workspace-tools-col" className="lg:col-span-7 flex flex-col space-y-6">
+        <section id="workspace-tools-col" className="lg:col-span-7 flex flex-col space-y-6 min-w-0 overflow-hidden">
           
           {/* Main Informational Greeting Section */}
           <div className="bg-gradient-to-r from-slate-950/80 to-slate-900/60 p-5 rounded-2xl border border-slate-800/60 space-y-3">
@@ -343,7 +343,7 @@ export default function App() {
         </section>
 
         {/* Right Column: Simulated Live Playground Preview (5 columns width) */}
-        <section id="simulator-preview-col" className="lg:col-span-5 flex flex-col bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80">
+        <section id="simulator-preview-col" className="lg:col-span-5 flex flex-col bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80 min-w-0">
           <div className="flex-1 flex flex-col space-y-4">
             
             {/* Simulator Title and Indicator */}
