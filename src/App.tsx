@@ -162,22 +162,44 @@ export default function App() {
   // On mount, check if running in standalone iframe widget mode
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("widget") === "true") {
+    const isWidget = params.get("widget") === "true";
+    if (isWidget) {
       setIsWidgetMode(true);
       
-      // Override default configurations with query parameters customized by user script!
-      setPersonality({
-        agencyName: params.get("agencyName") || DEFAULT_PERSONALITY.agencyName,
-        botName: params.get("botName") || DEFAULT_PERSONALITY.botName,
-        tone: "Profesyonel, büyüme odaklı, cana yakın ve stratejik",
-        specialty: "Dijital Pazarlama ve Büyüme Taktiği",
-        teamContact: params.get("teamContact") || DEFAULT_PERSONALITY.teamContact,
-        welcomeMessage: params.get("welcomeMessage") || DEFAULT_PERSONALITY.welcomeMessage,
-        themeColor: params.get("themeColor") || DEFAULT_PERSONALITY.themeColor,
-        markdownBrain: params.get("markdownBrain") || DEFAULT_PERSONALITY.markdownBrain,
-        systemInstructions: params.get("systemInstructions") || DEFAULT_PERSONALITY.systemInstructions,
-      });
+      // Instantly apply color from URL to prevent flashing, other settings will arrive via handshake
+      const themeColor = params.get("themeColor") || DEFAULT_PERSONALITY.themeColor;
+      setPersonality(prev => ({
+        ...prev,
+        themeColor
+      }));
+
+      // HTML5 postMessage handshake to load configuration without URL length limits!
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage("growth-bot-ready", "*");
+      }
     }
+
+    // Handshake listener to receive complex configuration securely from parent page
+    const handleHandshakeMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === "configure-growth-bot") {
+        const config = event.data.config;
+        if (config) {
+          setPersonality({
+            agencyName: config.agencyName || DEFAULT_PERSONALITY.agencyName,
+            botName: config.botName || DEFAULT_PERSONALITY.botName,
+            tone: config.tone || DEFAULT_PERSONALITY.tone || "Profesyonel, büyüme odaklı, cana yakın ve stratejik",
+            specialty: config.specialty || DEFAULT_PERSONALITY.specialty || "Dijital Pazarlama ve Büyüme Taktiği",
+            teamContact: config.teamContact || DEFAULT_PERSONALITY.teamContact,
+            welcomeMessage: config.welcomeMessage || DEFAULT_PERSONALITY.welcomeMessage,
+            themeColor: config.themeColor || DEFAULT_PERSONALITY.themeColor,
+            markdownBrain: config.markdownBrain || DEFAULT_PERSONALITY.markdownBrain,
+            systemInstructions: config.systemInstructions || DEFAULT_PERSONALITY.systemInstructions,
+          });
+        }
+      }
+    };
+
+    window.addEventListener("message", handleHandshakeMessage);
 
     // Call config check endpoint to verify backend state
     fetch("/api/config")
@@ -186,6 +208,10 @@ export default function App() {
         if (data) setConfigInfo(data);
       })
       .catch(err => console.error("Config check error:", err));
+
+    return () => {
+      window.removeEventListener("message", handleHandshakeMessage);
+    };
   }, []);
 
   const handleResetToDefaults = () => {
