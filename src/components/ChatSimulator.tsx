@@ -16,6 +16,7 @@ import { Message, Personality, FAQItem } from "../types";
 interface ChatSimulatorProps {
   personality: Personality;
   faqData: FAQItem[];
+  isEmbedOnly?: boolean;
 }
 
 // Helper to render message text and convert Markdown links into styled clickable tags
@@ -60,7 +61,7 @@ function renderMessageText(text: string, linkColorClass: string) {
   return <>{parts}</>;
 }
 
-export default function ChatSimulator({ personality, faqData }: ChatSimulatorProps) {
+export default function ChatSimulator({ personality, faqData, isEmbedOnly = false }: ChatSimulatorProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -257,6 +258,186 @@ export default function ChatSimulator({ personality, faqData }: ChatSimulatorPro
     { label: "Ajanslardan Farkınız Ne? 🧪", text: "Sizin diğer dijital pazarlama ajanslarından farkınız ne?" },
     { label: "Nasıl Çalışmaya Başlarız? 🤝", text: "Sizinle çalışmaya nasıl başlarız, süreç nasıl işliyor?" }
   ];
+
+  if (isEmbedOnly) {
+    return (
+      <div id="standalone-embed-container" className="flex flex-col h-full w-full bg-[#121421] text-xs relative overflow-hidden">
+        {/* Bot Header */}
+        <div id="embed-header" className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none`}>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+              <span className="font-display font-black text-sm">🤖</span>
+            </div>
+            <div>
+              <h3 className="font-bold text-xs truncate leading-none">{personality.botName}</h3>
+              <span className="text-[9px] text-white/80">{personality.agencyName}</span>
+            </div>
+          </div>
+          <button
+            id="btn-reset-embed"
+            onClick={handleResetChat}
+            className="p-1.5 hover:bg-white/15 rounded-lg transition-colors cursor-pointer pointer-events-auto"
+            title="Sohbeti Sıfırla"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-white" />
+          </button>
+        </div>
+
+        {/* Discovery Lead banner */}
+        <div id="embed-banner" className="bg-slate-900/90 border-b border-slate-800 p-2 text-[10px] flex justify-between items-center text-slate-300 select-none">
+          <span className="flex items-center gap-1">
+            <Calendar className={`w-3.5 h-3.5 ${theme.text}`} />
+            Büyüme Seansı ({personality.teamContact})
+          </span>
+          <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Aktif</span>
+        </div>
+
+        {/* Message List */}
+        <div id="embed-msg-list" className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[85%] rounded-2xl px-3 py-2 leading-relaxed text-slate-200 shadow-sm ${
+                  m.role === "user"
+                    ? `${theme.userBubble} rounded-tr-none font-medium`
+                    : "bg-slate-900/90 border border-slate-800/80 rounded-tl-none pr-4"
+                }`}
+              >
+                <p className="whitespace-pre-line text-[11px]">{renderMessageText(m.text, m.role === "user" ? "text-white" : theme.text)}</p>
+                <span className="text-[8px] text-slate-500 block text-right mt-1">
+                  {m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {messages.length === 1 && !isTyping && (
+            <div id="embed-onboarding-card" className="bg-slate-900/70 border border-emerald-500/15 rounded-2xl p-3.5 space-y-2.5 mt-1 border-dashed shadow-lg shadow-black/40 animate-fade-in shrink-0">
+              <p className="text-[10px] font-bold text-slate-300 flex items-center gap-1.5">
+                <Sparkles className={`w-3 h-3 ${theme.text} animate-pulse`} />
+                En Kritik Büyüme Darboğazınız Nedir?
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <button 
+                  onClick={() => sendMessage("Büyüme darboğazım: Müşteri edinmekte ve yeni kitlelere ulaşmakta zorlanıyorum. Metriq360 sistemi bu konuda ne sunuyor?")}
+                  type="button"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                >
+                  <span className="truncate">🔍 Müşteri Edinme Zorluğu</span>
+                  <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
+                </button>
+                
+                <button 
+                  onClick={() => sendMessage("Büyüme darboğazım: Ciro artışı hedefliyoruz. Satışları katlamak için funnel ve Meta/Google kampanyalarımızı nasıl optimize edebiliriz?")}
+                  type="button"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                >
+                  <span className="truncate">💰 Ciro Artışı Hedefleme</span>
+                  <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
+                </button>
+                
+                <button 
+                  onClick={() => sendMessage("Büyüme darboğazım: Yeterli nitelikli lead / potansiyel talep bulamıyoruz ve satış ekibimiz boş kalıyor. Lead gen sürecimizi ve reklamlarımızı nasıl tasarsınız?")}
+                  type="button"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-emerald-500/10 border border-slate-800/80 hover:border-emerald-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                >
+                  <span className="truncate">🎯 Yeterli Lead Bulamama</span>
+                  <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-emerald-400" />
+                </button>
+                
+                <button 
+                  onClick={() => sendMessage("Büyüme darboğazım: Dijital reklam bütçemiz boşa gidiyor (yüksek CAC), istediğimiz hedeflere ulaşamıyoruz. Bütçe kaçak durumunu nasıl denetleriz?")}
+                  type="button"
+                  className="w-full text-left text-[10.5px] bg-slate-950/80 hover:bg-rose-500/10 border border-slate-800/80 hover:border-rose-500/30 px-3 py-2 rounded-xl transition-all text-slate-300 hover:text-white flex items-center justify-between group cursor-pointer"
+                >
+                  <span className="truncate">📉 İstenilen Hedeflere Ulaşamama</span>
+                  <ArrowRight className="w-2.5 h-2.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-rose-400" />
+                </button>
+                
+                <div className="pt-2 border-t border-slate-900 mt-1 flex justify-between items-center bg-slate-950/40 p-1.5 rounded-lg border border-slate-950/60 font-mono text-[9px]">
+                  <span className="text-slate-500">Diagnostic Analiz:</span>
+                  <button 
+                    onClick={() => sendMessage("Bize özel ciro hesaplama aracı ile sayfa hızı/reklam bütçe kayıp teşhis testleriniz hakkında bilgi edinmek ve testleri yapmak istiyorum.")}
+                    type="button"
+                    className="font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                  >
+                    ⚡ Büyüme Testini Planla
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isTyping && (
+            <div className="flex flex-col space-y-1">
+              <div className="flex justify-start">
+                <div className="bg-slate-900 border border-slate-800/40 rounded-2xl rounded-tl-none px-4 py-2.5 flex items-center space-x-1 shadow-sm">
+                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></span>
+                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                </div>
+              </div>
+              <span className="text-[9px] text-slate-500 italic pl-1 animate-pulse">
+                ☕ Sunucu uyandırılıyor...
+              </span>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-start gap-2 text-[10px] text-rose-400">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* Suggested Questions Area */}
+        <div id="embed-suggestions" className="px-3 pb-1 border-t border-slate-900 bg-slate-950/20 max-h-[100px] overflow-y-auto">
+          <span className="text-[9px] text-slate-500 font-bold block py-1 select-none">Sık Sorulan Sorular:</span>
+          <div className="flex flex-wrap gap-1.5 pb-2">
+            {interactiveSuggestions.map((s, idx) => (
+              <button
+                key={idx}
+                id={`btn-suggestion-embed-${idx}`}
+                onClick={() => sendMessage(s.text)}
+                type="button"
+                className="text-[9.5px] bg-slate-905 border border-slate-800/80 text-slate-300 hover:text-white hover:border-slate-755 hover:bg-slate-800/50 py-1 px-2 rounded-full transition-all text-left pointer-events-auto cursor-pointer"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Chat Input Bar */}
+        <form id="form-chat-embed" onSubmit={handleFormSubmit} className="p-2.5 bg-slate-950 border-t border-slate-900 flex gap-2 items-center">
+          <input
+            id="input-chat-embed"
+            ref={inputMobileRef}
+            type="text"
+            placeholder="Mesajınızı yazın..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            disabled={isTyping}
+            className="flex-1 bg-slate-900 border border-slate-800 rounded-full px-3.5 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 text-xs"
+          />
+          <button
+            id="btn-send-embed"
+            type="submit"
+            disabled={!inputText.trim() || isTyping}
+            className={`p-2 rounded-full ${theme.bg} text-white transition-all pointer-events-auto cursor-pointer disabled:opacity-50`}
+          >
+            <Send className="w-3.5 h-3.5" />
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full space-y-4">
