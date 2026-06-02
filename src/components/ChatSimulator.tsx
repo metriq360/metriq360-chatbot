@@ -262,9 +262,9 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
 
   if (isEmbedOnly) {
     return (
-      <div id="standalone-embed-container" className="flex flex-col h-full w-full bg-[#121421] text-xs relative overflow-hidden">
+      <div id="standalone-embed-container" className="flex flex-col h-full w-full min-h-0 bg-[#121421] text-xs relative overflow-hidden">
         {/* Bot Header */}
-        <div id="embed-header" className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none`}>
+        <div id="embed-header" className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none shrink-0`}>
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center border border-white/20 shadow-inner">
               <span className="font-display font-black text-sm">🚀</span>
@@ -301,7 +301,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
         </div>
 
         {/* Discovery Lead banner */}
-        <div id="embed-banner" className="bg-slate-900/90 border-b border-slate-800/80 p-2 text-[10px] flex justify-between items-center text-slate-300 select-none">
+        <div id="embed-banner" className="bg-slate-900/90 border-b border-slate-800/80 p-2 text-[10px] flex justify-between items-center text-slate-300 select-none shrink-0">
           <span className="flex items-center gap-1.5 font-medium">
             <Calendar className={`w-3.5 h-3.5 ${theme.text}`} />
             Büyüme Seansı ({personality.teamContact})
@@ -496,17 +496,17 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
         
         {simulatedDevice === "mobile" ? (
           // Mobile Phone Shell Mockup
-          <div className="w-[320px] h-[540px] bg-slate-950 rounded-[40px] border-[8px] border-slate-800 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] relative flex flex-col overflow-hidden ring-1 ring-slate-800">
+          <div className="w-[320px] h-[540px] shrink-0 bg-slate-950 rounded-[40px] border-[8px] border-slate-800 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] relative flex flex-col overflow-hidden ring-1 ring-slate-800">
             {/* Phone Notch/Speaker */}
             <div className="absolute top-1 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-800 rounded-full z-20 flex items-center justify-center">
               <span className="w-8 h-1 bg-slate-900 rounded-full"></span>
             </div>
 
             {/* Simulated Live Phone App Content */}
-            <div className="flex-1 flex flex-col h-full bg-[#121421] text-xs pt-4 relative">
+            <div className="flex-1 flex flex-col h-full min-h-0 bg-[#121421] text-xs pt-4 relative">
               
               {/* Bot Header */}
-              <div className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none`}>
+              <div className={`p-4 bg-gradient-to-r ${theme.gradient} text-white flex items-center justify-between pb-3 shadow-[0_4px_12px_rgba(0,0,0,0.25)] select-none shrink-0`}>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
                     <span className="font-display font-black text-sm">🤖</span>
@@ -527,7 +527,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
               </div>
 
               {/* Discovery Lead banner */}
-              <div className="bg-slate-900/90 border-b border-slate-800 p-2 text-[10px] flex justify-between items-center text-slate-300">
+              <div className="bg-slate-900/90 border-b border-slate-800 p-2 text-[10px] flex justify-between items-center text-slate-300 shrink-0">
                 <span className="flex items-center gap-1">
                   <Calendar className={`w-3.5 h-3.5 ${theme.text}`} />
                   Büyüme Seansı ({personality.teamContact})
@@ -640,7 +640,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
               </div>
 
               {/* Suggested Questions Area */}
-              <div className="px-3 pb-1 border-t border-slate-900 bg-slate-950/20 max-h-[100px] overflow-y-auto">
+              <div className="px-3 pb-1 border-t border-slate-900 bg-slate-950/20 max-h-[100px] overflow-y-auto shrink-0">
                 <span className="text-[9px] text-slate-500 font-bold block py-1">Sık Sorulan Sorular:</span>
                 <div className="flex flex-wrap gap-1.5 pb-2">
                   {interactiveSuggestions.map((s, idx) => (
@@ -658,7 +658,7 @@ export default function ChatSimulator({ personality, faqData, isEmbedOnly = fals
               </div>
 
               {/* Chat Input Bar */}
-              <form id="form-chat-mobile" onSubmit={handleFormSubmit} className="p-2.5 bg-slate-950 border-t border-slate-900 flex gap-2 items-center">
+              <form id="form-chat-mobile" onSubmit={handleFormSubmit} className="p-2.5 bg-slate-950 border-t border-slate-900 flex gap-2 items-center shrink-0">
                 <input
                   id="input-chat-mobile"
                   ref={inputMobileRef}
